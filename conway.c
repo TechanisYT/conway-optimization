@@ -98,11 +98,11 @@ int main(void)
 		for(y = 0; y< YMAX; y++){
 			for(x = 0; x< XMAX; x++){
 				gotoxy(0,0);
-				cprintf("%2d %2d",x , y);
+				//cprintf("%2d %2d",x , y);
 				findNachbarn(x,y,spielfeld,nachbarn);
 				lebende = zaehlLebende(nachbarn);
 				gotoxy(x,y);
-				cprintf("%d",lebende /7 );
+				//cprintf("%d",lebende /7 );
 				pruefeRegeln(x,y,lebende, temp, spielfeld);
 			}// for x
 		}// for y
