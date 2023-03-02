@@ -98,11 +98,11 @@ int main(void)
 		for(y = 0; y< YMAX; y++){
 			for(x = 0; x< XMAX; x++){
 				gotoxy(0,0);
-				cprintf("%2d %2d",x , y);
+				//cprintf("%2d %2d",x , y);
 				findNachbarn(x,y,spielfeld,nachbarn);
 				lebende = zaehlLebende(nachbarn);
 				gotoxy(x,y);
-				cprintf("%d",lebende /7 );
+				//cprintf("%d",lebende /7 );
 				pruefeRegeln(x,y,lebende, temp, spielfeld);
 			}// for x
 		}// for y
@@ -206,7 +206,6 @@ void findNachbarn(int x, int y, int spielfeld[][YMAX], int nachbarn[][BOXSIZE]){
 	unsigned int osy, iy; 
 	signed int ofy;
 	signed int ofx;
-	long int temp;
 
 	
 	for(ofy = y-1, iy=0; ofy <= (signed int)y+1; ++ofy , ++iy){
@@ -231,8 +230,7 @@ void findNachbarn(int x, int y, int spielfeld[][YMAX], int nachbarn[][BOXSIZE]){
 				else {
 					osx = ofx;
 				}
-		  temp = spielfeld[osx][osy];
-			nachbarn[ix][iy] = temp;		
+			nachbarn[ix][iy] = spielfeld[osx][osy];	
 		}//for ofx
 	}//for ofy	
 
