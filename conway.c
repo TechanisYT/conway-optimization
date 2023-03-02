@@ -14,7 +14,7 @@
 #define XMAX 40
 #define YMAX 25
 #define BOXSIZE 3
-#define ROUNDS 1
+#define ROUNDS 2
 
 void findNachbarn(int x, int y, int spielfeld[][YMAX], int nachbarn[][BOXSIZE]);
 void initSpielfeld(int spielfeld [][YMAX]);
@@ -98,11 +98,11 @@ int main(void)
 		for(y = 0; y< YMAX; y++){
 			for(x = 0; x< XMAX; x++){
 				gotoxy(0,0);
-				//cprintf("%2d %2d",x , y);
+				cprintf("%2d %2d",x , y);
 				findNachbarn(x,y,spielfeld,nachbarn);
 				lebende = zaehlLebende(nachbarn);
 				gotoxy(x,y);
-				//cprintf("%d",lebende /7 );
+				cprintf("%d",lebende /7 );
 				pruefeRegeln(x,y,lebende, temp, spielfeld);
 			}// for x
 		}// for y
@@ -144,28 +144,32 @@ int main(void)
 
 void pruefeRegeln(int x, int y,  int lebende, int temp[][YMAX], int spielfeld[][YMAX]){
 	//hier kommen meine regeln
-	if(spielfeld[x][y] == 0 ){
+	switch (spielfeld[x][y])
+	{
+	case 0:
+		
 		if(lebende == 3){
 			temp[x][y] = 1;
 //			printf("t3\n\n");
 		}
-	}
-	if(spielfeld[x][y] == 1){
-		if(lebende == 2){
-			temp[x][y] = 1;
+	
+	break;
+	case 1:
+		switch (lebende)
+		{
+			case 2:
+				temp[x][y] = 1;
 //			printf("=2\n\n");
-		}
-		if(lebende == 3){
-			temp[x][y] = 1;
+				break;
+
+			case 3:
+				temp[x][y] = 1;
 //			printf("=3\n\n");
-		}
-		if(lebende < 2){
-			temp[x][y] = 0;
-//			printf("<2\n\n");
-		}
-		if(lebende > 3){					
-			temp[x][y] = 0;
-//			printf(">3\n\n");
+				break;
+
+			default:
+				temp[x][y] = 0;
+				break;
 		}
 	}
 }
@@ -202,6 +206,8 @@ void findNachbarn(int x, int y, int spielfeld[][YMAX], int nachbarn[][BOXSIZE]){
 	unsigned int osy, iy; 
 	signed int ofy;
 	signed int ofx;
+	long int temp;
+
 	
 	for(ofy = y-1, iy=0; ofy <= (signed int)y+1; ++ofy , ++iy){
 		for(ofx = x-1,ix = 0; ofx <= (signed int)x+1; ++ofx , ++ix){
@@ -225,8 +231,8 @@ void findNachbarn(int x, int y, int spielfeld[][YMAX], int nachbarn[][BOXSIZE]){
 				else {
 					osx = ofx;
 				}
-
-			nachbarn[ix][iy] = spielfeld[osx][osy];			
+		  temp = spielfeld[osx][osy];
+			nachbarn[ix][iy] = temp;		
 		}//for ofx
 	}//for ofy	
 
