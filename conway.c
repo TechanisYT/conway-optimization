@@ -155,20 +155,14 @@ void pruefeRegeln(int x, int y,  int lebende, int temp[][YMAX], int spielfeld[][
 			temp[x][y] = 1;
 //			printf("=2\n\n");
 		}
-	}
-	if(spielfeld[x][y] == 1){
 		if(lebende == 3){
 			temp[x][y] = 1;
 //			printf("=3\n\n");
 		}
-	}
-	if(spielfeld[x][y] == 1){
 		if(lebende < 2){
 			temp[x][y] = 0;
 //			printf("<2\n\n");
 		}
-	}
-	if(spielfeld[x][y] == 1){
 		if(lebende > 3){					
 			temp[x][y] = 0;
 //			printf(">3\n\n");
