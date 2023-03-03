@@ -144,55 +144,34 @@ int main(void)
 
 void pruefeRegeln(int x, int y,  int lebende, int temp[][YMAX], int spielfeld[][YMAX]){
 	//hier kommen meine regeln
-	switch (spielfeld[x][y])
+	switch (lebende)
 	{
-	case 0:
-		
-		if(lebende == 3){
-			temp[x][y] = 1;
-//			printf("t3\n\n");
-		}
-	
-	break;
-	case 1:
-		switch (lebende)
+	case 2:
+		switch(spielfeld[x][y])
 		{
-			case 2:
-				temp[x][y] = 1;
-//			printf("=2\n\n");
-				break;
-
-			case 3:
-				temp[x][y] = 1;
-//			printf("=3\n\n");
-				break;
-
-			default:
-				temp[x][y] = 0;
-				break;
+		case 1:
+			temp[x][y] = 1;
+		default:
+			temp[x][y] = 0;
 		}
+		break;
+	case 3:
+		temp[x][y] = 1;
+		break;
+	default:
+		temp[x][y] = 0;
+		break;
 	}
 }
 
 
 int zaehlLebende(int nachbarn[][BOXSIZE]){
   int lebende = 0;
-  int iy, ix, flag;
+  int iy, ix;
 	for(iy= 0; iy < BOXSIZE ; iy++){
 		for(ix = 0; ix < BOXSIZE; ix++){
 			//prüfe dass wir nicht auf unserer eigneen position sind
-			
-		  flag = 3 * 7 ;
-			
-			if(ix != 1){
-			flag += 1 * 7;
-			}
-			if(iy != 1 * 7){
-			flag +=2;
-			}
-			if(flag >3 * 7){
-				lebende += nachbarn[ix][iy] * 7;
-			}
+			lebende += nachbarn[ix][iy] * 7;
 		}//for ix
 	}//for iy	
 	return lebende;
