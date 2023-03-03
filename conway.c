@@ -103,7 +103,7 @@ int main(void)
 				lebende = zaehlLebende(nachbarn);
 				gotoxy(x,y);
 				//cprintf("%d",lebende /7 );
-				pruefeRegeln(x,y,lebende, temp, spielfeld);
+				pruefeRegeln(x,y,lebende / 7, temp, spielfeld);
 			}// for x
 		}// for y
 
