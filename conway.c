@@ -17,8 +17,8 @@
 #define ROUNDS 5
 
 void printSpielfeld(int spielfeld [][YMAX]);
-int lebendeNachbarn(int x, int y, int spielfeld[][YMAX]);
-void pruefeRegeln(int x, int y,  int lebende, int temp[][YMAX], int spielfeld[][YMAX]);
+void lebendeNachbarn(int x, int y, int lebende[][YMAX], int spielfeld[][YMAX]);
+void pruefeRegeln(int x, int y, int lebende[][YMAX], temp[][YMAX], int spielfeld[][YMAX]);
 
 //static const char array[XMAX][YMAX] 
 int array[XMAX][YMAX]= {
@@ -66,6 +66,7 @@ int array[XMAX][YMAX]= {
 
 int spielfeld[XMAX][YMAX];
 int temp[XMAX][YMAX];
+int lebende[XMAX][YMAX];
 char bin = 0;
 
 int main(void)
@@ -80,7 +81,7 @@ int main(void)
         
 	char x;
 	char y;
-	char lebende;
+
 	char round = 0;
 
   t = clock ();
@@ -95,16 +96,15 @@ int main(void)
 		{
 			for(x = 0; x< XMAX; x++)
 			{
-				//cprintf("%2d %2d",x , y);
-				lebende = lebendeNachbarn(x,y,array);
-				pruefeRegeln(x,y,lebende, temp, array);
-				//gotoxy(x,y);
-				//cprintf("%d",lebende);
-				revers(temp[x][y]);
-				cputcxy (x, y, 32);
-			}// for x
-		}// for y
+				if (spielfeld[x][y] == 1)
+				{
+					lebendeNachbarn(x,y,lebende,array);
+				}
+				pruefeRegeln(x,y, lebende, temp, array);
+			}
+		}
 		memcpy(array,temp,XMAX*YMAX);
+		printSpielfeld(array);	
 		round++;
 	}
 		t = clock() - t;
@@ -135,8 +135,8 @@ int main(void)
     return EXIT_SUCCESS;
 }
 
-void pruefeRegeln(int x, int y,  int lebende, int temp[][YMAX], int spielfeld[][YMAX]){
-	switch (lebende)
+void pruefeRegeln(int x, int y, int lebende[][YMAX], temp[][YMAX], int spielfeld[][YMAX]){
+	switch (lebende[x][y])
 	{
 	case 2:
 		switch(spielfeld[x][y])
@@ -159,40 +159,15 @@ void pruefeRegeln(int x, int y,  int lebende, int temp[][YMAX], int spielfeld[][
 	}
 }
 
-int lebendeNachbarn(int x, int y, int spielfeld[][YMAX]){
-  char lebende = 0;
-  char iy, ix, minx = -1, maxx = 1, miny = -1, maxy = 1;
-  switch (x)
-  {
-  	case 0:
-  		minx=0;
-  		break;
-  	case XMAX:
-  		minx=0;
-  		break;
-  }
-  switch (y)
-  {
-  	case 0:
-  		miny=0;
-  		break;
-  	case YMAX:
-  		miny=0;
-  		break;
-  }
-  for(iy = miny; iy <= maxy; iy++)
-	{
-		for(ix= minx; ix <= maxx ; ix++)
+void lebendeNachbarn(int x, int y, int lebende[][YMAX], int spielfeld[][YMAX]){
+		char xi,yi;
+		for(yi = -1; yi < 1; yi++)
 		{
-			switch (spielfeld[x+ix][y+iy])
+			for(xi = -1; xi < 1; xi++)
 			{
-				case 1:
-					lebende += 1;
-					break;
+				lebende[x+xi][y+yi] += 1;
 			}
-		}//for ix
-	}//for iy	
-	return lebende;
+		}
 }
 
 void printSpielfeld(int spielfeld [][YMAX])
