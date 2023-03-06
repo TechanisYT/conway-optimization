@@ -13,15 +13,10 @@
 //HighRes Mode 300x200px
 #define XMAX 40
 #define YMAX 25
-#define BOXSIZE 3
-#define ROUNDS 5
-
-void printSpielfeld(int spielfeld [][YMAX]);
-void lebendeNachbarn(int x, int y, int lebende[][YMAX], int spielfeld[][YMAX]);
-void pruefeRegeln(int x, int y, int lebende[][YMAX], temp[][YMAX], int spielfeld[][YMAX]);
+#define ROUNDS 100
 
 //static const char array[XMAX][YMAX] 
-int array[XMAX][YMAX]= {
+char array[XMAX][YMAX]= {
 {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -64,20 +59,19 @@ int array[XMAX][YMAX]= {
 {0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
 };
 
-int spielfeld[XMAX][YMAX];
-int temp[XMAX][YMAX];
-int lebende[XMAX][YMAX];
+char temp[XMAX][YMAX];
+char lebende[XMAX][YMAX];
 char bin = 0;
 
-int main(void)
+char main(void)
 {
   clock_t       t;
-  unsigned long sec;
-  unsigned      sec10;
-  unsigned long fps;
-  unsigned      fps10;
-  unsigned char background;
-  unsigned char text;
+  long sec;
+  char sec10;
+  long fps;
+  char fps10;
+  char background;
+  char text;
         
 	char x;
 	char y;
@@ -85,26 +79,89 @@ int main(void)
 	char round = 0;
 
   t = clock ();
-  clrscr();
 	background = bgcolor(COLOR_BLACK);
 	text = textcolor(COLOR_WHITE);
-	printSpielfeld(array);
+	
 
 	while(round < ROUNDS && !kbhit())
 	{
+		clrscr ();
 		for(y = 0; y< YMAX; y++)
 		{
 			for(x = 0; x< XMAX; x++)
 			{
-				if (spielfeld[x][y] == 1)
+				lebende[x][y] = 0;
+				switch (array[x][y])
 				{
-					lebendeNachbarn(x,y,lebende,array);
+					case 1:
+						revers(1);
+						cputcxy (x, y, 32);
+						break;
 				}
-				pruefeRegeln(x,y, lebende, temp, array);
 			}
 		}
+		
+		for(y = 0; y< YMAX; y++)
+		{
+			for(x = 0; x< XMAX; x++)
+			{
+				if (array[x][y] == 1)
+				{
+					char xi,yi,minx = 0,maxx = 2,miny = 0,maxy = 2;
+					switch (x)
+					{
+					 	case 0:
+					 		minx=1;
+					 		break;
+					 	case XMAX-1:
+					 		maxx=1;
+					 		break;
+					}
+					switch (y)
+					{
+						case 0:
+							miny=1;
+					 		break;
+						case YMAX-1:
+					 		maxy=1;
+					 		break;
+				  }
+					for(yi = miny; yi <= maxy; yi++)
+					{
+						for(xi = minx; xi <= maxx; xi++)
+						{
+								lebende[x+xi-1][y+yi-1] += 1;
+						}
+					}
+					lebende[x][y] -= 1;
+				}
+			}
+		}
+		for(y = 0; y< YMAX; y++)
+		{
+			for(x = 0; x< XMAX; x++)
+			{
+				//gotoxy(x,y);
+				//cprintf("%d",lebende[x][y]);
+				switch (lebende[x][y])
+				{
+				case 2:
+					if(array[x][y] == 1)
+						temp[x][y] = 1;
+					else
+						temp[x][y] = 0;
+					break;
+				case 3:
+					temp[x][y] = 1;
+					break;
+				default:
+					temp[x][y] = 0;
+					break;
+				}
+				//array[x][y] = temp[x][y];
+			}
+		}	
 		memcpy(array,temp,XMAX*YMAX);
-		printSpielfeld(array);	
 		round++;
 	}
 		t = clock() - t;
@@ -133,60 +190,4 @@ int main(void)
 
     /* Done */
     return EXIT_SUCCESS;
-}
-
-void pruefeRegeln(int x, int y, int lebende[][YMAX], temp[][YMAX], int spielfeld[][YMAX]){
-	switch (lebende[x][y])
-	{
-	case 2:
-		switch(spielfeld[x][y])
-		{
-		case 1:
-			temp[x][y] = 1;
-			break;
-		default:
-			temp[x][y] = 0;
-			break;
-		}
-		break;
-		
-	case 3:
-		temp[x][y] = 1;
-		break;
-	default:
-		temp[x][y] = 0;
-		break;
-	}
-}
-
-void lebendeNachbarn(int x, int y, int lebende[][YMAX], int spielfeld[][YMAX]){
-		char xi,yi;
-		for(yi = -1; yi < 1; yi++)
-		{
-			for(xi = -1; xi < 1; xi++)
-			{
-				lebende[x+xi][y+yi] += 1;
-			}
-		}
-}
-
-void printSpielfeld(int spielfeld [][YMAX])
-{
-	char x,y;
-	for(y = 0; y< YMAX; y++)
-	{
-		for(x = 0; x< XMAX; x++)
-		{
-			switch (spielfeld[x][y])
-			{
-				case 1:
-					revers(1);
-					break;
-				default:
-					revers(0);	
-					break;
-			}
- 			cputcxy (x, y, 32);
-		}
-	}
 }
