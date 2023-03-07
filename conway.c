@@ -65,31 +65,30 @@ char bin = 0;
 
 char main(void)
 {
-  clock_t       t;
-  long sec;
+	char background = bgcolor(COLOR_BLACK);
+	char text = textcolor(COLOR_WHITE);
+
+	long sec;
   char sec10;
   long fps;
   char fps10;
-  char background;
-  char text;
         
 	char x;
 	char y;
 
 	char round = 0;
-
+  clock_t       t;
   t = clock ();
-	background = bgcolor(COLOR_BLACK);
-	text = textcolor(COLOR_WHITE);
-	
 
 	while(round < ROUNDS && !kbhit())
 	{
 		clrscr ();
-		for(y = 0; y< YMAX; y++)
-		{
-			for(x = 0; x< XMAX; x++)
-			{
+		//for(y = 0; y< YMAX; y++){
+		y=0;
+		do {
+			x=0;
+			//for(x = 0; x< XMAX; x++){
+			do {
 				lebende[x][y] = 0;
 				switch (array[x][y])
 				{
@@ -98,13 +97,17 @@ char main(void)
 						cputcxy (x, y, 32);
 						break;
 				}
-			}
-		}
+				x++;
+			} while(x<XMAX);
+			y++;
+		} while(y<YMAX);
 		
-		for(y = 0; y< YMAX; y++)
-		{
-			for(x = 0; x< XMAX; x++)
-			{
+		//for(y = 0; y< YMAX; y++){
+		y=0;
+		do {
+			x=0;
+			//for(x = 0; x< XMAX; x++){
+			do {
 				if (array[x][y] == 1)
 				{
 					char xi,yi,minx = 0,maxx = 2,miny = 0,maxy = 2;
@@ -126,21 +129,30 @@ char main(void)
 					 		maxy=1;
 					 		break;
 				  }
-					for(yi = miny; yi <= maxy; yi++)
-					{
-						for(xi = minx; xi <= maxx; xi++)
-						{
+				  yi=miny;
+					//for(yi = miny; yi <= maxy; yi++){
+				  do {
+				  	xi=minx;
+						//for(xi = minx; xi <= maxx; xi++){
+				  	do {
 								lebende[x+xi-1][y+yi-1] += 1;
-						}
-					}
+								xi++;
+						}while(xi<=maxx);
+						yi++;
+					}while(yi<=maxy);
 					lebende[x][y] -= 1;
 				}
-			}
-		}
-		for(y = 0; y< YMAX; y++)
-		{
-			for(x = 0; x< XMAX; x++)
-			{
+				x++;
+			} while(x<XMAX);
+			y++;
+		} while(y<YMAX);
+
+		//for(y = 0; y< YMAX; y++){
+		y=0;
+		do {
+			x=0;
+			//for(x = 0; x< XMAX; x++){
+			do {
 				//gotoxy(x,y);
 				//cprintf("%d",lebende[x][y]);
 				switch (lebende[x][y])
@@ -159,8 +171,10 @@ char main(void)
 					break;
 				}
 				//array[x][y] = temp[x][y];
-			}
-		}	
+				x++;
+			} while(x < XMAX);
+			y++;
+		}	while(y < YMAX);
 		memcpy(array,temp,XMAX*YMAX);
 		round++;
 	}
