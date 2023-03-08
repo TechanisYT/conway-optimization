@@ -12,6 +12,7 @@ redundant flag in zaehlLebende | 36 | 0.0
 new zaehllebende an without FindNachbarn | 19.8 | 0.0
 all functions new | 4.9 | 0.1
 bug-fixing | 3.6 | 0.2
+null array, compiler options, unsigned char | 1.7 | 0.5
 
 
 https://cc65.github.io/doc/funcref.html
