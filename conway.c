@@ -60,7 +60,7 @@ const static unsigned char spielfeld[XMAX][YMAX]= {
 {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 */
-const static unsigned char spielfeld[XMAX*YMAX]={
+unsigned char spielfeld[XMAX*YMAX]={
 0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -118,7 +118,7 @@ unsigned char zero[XMAX*YMAX];
 //static char spielfeld[XMAX][YMAX];
 unsigned char temp[XMAX*YMAX];
 unsigned char beside[XMAX*YMAX];
-static const unsigned char pixels = XMAX*YMAX;
+//static const unsigned char pixels = XMAX*YMAX;
 
 
 
@@ -129,23 +129,21 @@ static const unsigned char pixels = XMAX*YMAX;
 //Lookup Tables
 unsigned char besideLookup[XMAX*YMAX*8];
 unsigned char cellLookup[XMAX*YMAX];
-unsigned char graphicLookupx[XMAX*YMAX];
-unsigned char graphicLookupy[XMAX*YMAX];
+//unsigned char graphicLookupx[XMAX*YMAX];
+//unsigned char graphicLookupy[XMAX*YMAX];
 
 int main(void)
 {
   clock_t       t;
   unsigned long sec;
-  unsigned      sec10;
+  unsigned      sec10, sec100;
   unsigned long fps;
-  unsigned      fps10;
+  unsigned      fps10, fps100;
   unsigned char background;
   unsigned char text;
         
-	unsigned char x, xx;
-	unsigned char y, yy;
-	unsigned long i;
-	unsigned char j;
+  int x;
+	unsigned char y, i, j;
 	/*
 	unsigned char temp1;
 	unsigned char temp2;
@@ -163,8 +161,9 @@ int main(void)
 	//Lookup Calc:
 	
 
-
+	y=0;
 	do{
+		x=0;
 		do{
 				besideLookup[i]=(x-1)+((y-1)*XMAX);
 				besideLookup[i+1]=(x-1)+(y*XMAX);
@@ -174,31 +173,30 @@ int main(void)
 				besideLookup[i+5]=(x+1)+((y+1)*XMAX);
 				besideLookup[i+6]=(x+1)+(y*XMAX);
 				besideLookup[i+7]=x+((y+1)*XMAX);
-				i=i+8;
-				++x;
+				i+=8;
+				x++;
 		}while(x<XMAX-1);
-		x=0;
-		++y;
+		y++;
 	}while(y<YMAX-1);
-	i=0;
-	x=0;
-	y=0;
-	do{
-		x=0;
-		do{
-			//cellLookup[i]=i;
-			graphicLookupy[i]=y;
-			graphicLookupx[i]=x;
-			
-			//gotoxy (x, y); cprintf (i);
-			++i;
-			++x;
-		}while(x<XMAX-1);
-		++y;
-	}while(y<YMAX-1);
-	i=0;
-	x=0;
-	y=0;
+	//i=0;
+	//x=0;
+	//y=0;
+	//do{
+	//	x=0;
+	//	do{
+	//		//cellLookup[i]=i;
+	//		graphicLookupy[i]=y;
+	//		graphicLookupx[i]=x;
+	//		
+	//		//gotoxy (x, y); cprintf (i);
+	//		++i;
+	//		++x;
+	//	}while(x<XMAX-1);
+	//	++y;
+	//}while(y<YMAX-1);
+	//i=0;
+	//x=0;
+	//y=0;
 
 
 
@@ -245,7 +243,6 @@ int main(void)
 
 	while(round < ROUNDS && !kbhit()){
 		clrscr();
-		i=0;
 		memcpy(temp,zero,XMAX*YMAX);
 		memcpy(beside,zero,XMAX*YMAX);
 		y=0;
@@ -254,35 +251,34 @@ int main(void)
 			do{
 				//gotoxy (xx, yy); cprintf (beside[xx+yy*XMAX]);
 				if(spielfeld[y*XMAX+x]==1){
-					++beside[(y-1)*XMAX+(x-1)];
-					++beside[(y-1)*XMAX+x];
-					++beside[(y-1)*XMAX+(x+1)];
-					++beside[y*XMAX+(x-1)];
-					++beside[y*XMAX+(x+1)];
-					++beside[(y+1)*XMAX+(x-1)];
-					++beside[(y+1)*XMAX+x];
-					++beside[(y+1)*XMAX+(x+1)];
-					//++beside[besideLookup[i]];
-					//++beside[besideLookup[i+1]];
-					//++beside[besideLookup[i+2]];
-					//++beside[besideLookup[i+3]];
-					//++beside[besideLookup[i+4]];
-					//++beside[besideLookup[i+5]];
-					//++beside[besideLookup[i+6]];
-					//++beside[besideLookup[i+7]];
+					//beside[(y-1)*XMAX+(x-1)]++;
+					//beside[(y-1)*XMAX+x]++;
+					//beside[(y-1)*XMAX+(x+1)]++;
+					//beside[y*XMAX+(x-1)]++;
+					//beside[y*XMAX+(x+1)]++;
+					//beside[(y+1)*XMAX+(x-1)]++;
+					//beside[(y+1)*XMAX+x]++;
+					//beside[(y+1)*XMAX+(x+1)]++;
+					beside[besideLookup[i]]++;
+					beside[besideLookup[i+1]]++;
+					beside[besideLookup[i+2]]++;
+					beside[besideLookup[i+3]]++;
+					beside[besideLookup[i+4]]++;
+					beside[besideLookup[i+5]]++;
+					beside[besideLookup[i+6]]++;
+					beside[besideLookup[i+7]]++;
 				}
-				i++;
-				++j;
-				++xx;
-			}while(xx<XMAX-1);
-			++yy;
-		}while(yy<YMAX-1);
+				x++;
+			}while(x<XMAX-1);
+			y++;
+		}while(y<YMAX-1);
 
 		x=0;
-		i=0;
 		y=0;
+		
 		do{
-			switch (beside[x]){//x+y*XMAX
+			switch (beside[x])
+			{//x+y*XMAX
 				case 2:
 					if (spielfeld[x] == 1)//cellLookup[i]
 						temp[x]=1;
@@ -291,25 +287,23 @@ int main(void)
 					temp[x]=1;
 					break;
 			}
-			if(spielfeld[x] == 1){
-				
+			if(spielfeld[x] == 1)
+			{
 				revers(1);
 				//gotoxy (x-y*XMAX,y); cprintf (x);
-				cputcxy (x-y*XMAX,y, 32);
+				cputcxy (x-(y*XMAX),y, 32);
 			}
-			if(x%XMAX==0){
-				++y;
+			if((x%XMAX)==0)
+			{
+				y++;
+				//gotoxy (0,0);
+				//cprintf ("%d",y);
 			}
-			++i;
-			++x;
-		}while(x<(YMAX-1)*(XMAX-1));// for y
-		yy=0;
-		xx=0;
+			
+			x++;
+		}while(x<((XMAX-1)*(YMAX-1)));// for y
 		
-		j=0;
 		memcpy(spielfeld,temp,XMAX*YMAX);
-		
-		
 		++round;
 	}
 		t = clock() - t;
@@ -322,9 +316,11 @@ int main(void)
     /* Calculate stats */
     sec   = (t * 10) / CLK_TCK;
     sec10 = sec % 10;
+    sec100 = sec % 100;
     sec  /= 10;
     fps   = (round * (CLK_TCK * 10)) / t;
     fps10 = fps % 10;
+    fps100 = fps % 100;
     fps  /= 10;
 
     /* Output stats */
