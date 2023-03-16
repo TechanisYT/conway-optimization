@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 
 #define P_SCREEN0 ((unsigned char *)0x2000)
 #define P_COLOR0  ((unsigned char *)0x0400)
@@ -65,6 +66,7 @@ unsigned char lebende[XMAX][YMAX];
 
 unsigned char main(void)
 {
+
 	unsigned char background = bgcolor(COLOR_BLACK);
 	unsigned char text = textcolor(COLOR_WHITE);
 
