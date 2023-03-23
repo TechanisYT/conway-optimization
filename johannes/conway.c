@@ -14,7 +14,7 @@
 //HighRes Mode 300x200px
 #define XMAX 40
 #define YMAX 25
-#define ROUNDS 100
+#define ROUNDS 50
 
 //static const char array[XMAX][YMAX] 
 unsigned char array[XMAX][YMAX]= {
@@ -184,7 +184,7 @@ unsigned char main(void)
   /* Reset screen colors */
     bgcolor (background);
     textcolor (text);
-    clrscr ();
+    //clrscr ();
 
     /* Calculate stats */
     sec   = (t * 10) / CLK_TCK;
