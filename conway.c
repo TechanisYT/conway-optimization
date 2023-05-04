@@ -8,6 +8,7 @@
 //v=vic.addr;
 #define P_COLOR ((unsigned char *)0xD800)
 #define P_TEXT  ((unsigned char *)0x0400)
+#define P_CIA 	((unsigned char *)0xDD00)
 
 #define ROUNDS 1
 
@@ -103,9 +104,6 @@ int main(void)
 					temp[x]=1;
 					break;
 			}
-			if(spielfeld[x] == 1){
-				//ausgabe
-			}
 			++x;
 		}while(x<1000);
 		memcpy(spielfeld,temp,1000);
@@ -129,11 +127,12 @@ int main(void)
 
     /* Output stats */
     gotoxy (0, 0); cprintf ("time  : %lums", sec);
-    gotoxy (0, 1); cprintf ("frames: %lu", round);
-    gotoxy (0, 2); cprintf ("fps   : %lu.%u", fps, fps10);
+    gotoxy (0, 1); cprintf ("clock : %lu", t);
+    gotoxy (0, 2); cprintf ("frames: %lu", round);
+    gotoxy (0, 3); cprintf ("fps   : %lu.%u", fps, fps10);
 
     /* Wait for a key, then end */
-    cputsxy (0, 4, "Press any key when done...");
+    cputsxy (0, 5, "Press any key when done...");
     (void) cgetc ();
 
     /* Done */
