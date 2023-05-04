@@ -11,7 +11,7 @@
 
 #define P_SCREEN1 ((unsigned char *)0x6000)
 #define P_COLOR1  ((unsigned char *)0x4400)
-#define ROUNDS 1
+#define ROUNDS 100
 
 unsigned char spielfeld[1000]={
 0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -41,12 +41,6 @@ unsigned char spielfeld[1000]={
 0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 unsigned char temp[1000];
 unsigned char beside[1000];
-
-
-
-
-
-
 
 //Lookup Tables
 
