@@ -9,7 +9,7 @@
 #define P_TEXT  ((unsigned char *)0x0400)
 #define P_CIA 	((unsigned char *)0xDD00)
 
-#define ROUNDS 1
+#define ROUNDS 100
 
 unsigned char start[1000]={
 0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -66,11 +66,7 @@ int main(void)
 
 	unsigned char *spielfeld;
 	spielfeld = (unsigned char *) P_TEXT;
-	for (x = 0; x < 1000; ++x)
-	{
-		spielfeld[x]=start[x];
-	}
-	x=0;
+	memcpy(spielfeld,start,1000);
 
 	background = bgcolor(COLOR_BLACK);
 	text = textcolor(COLOR_WHITE);
