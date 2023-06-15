@@ -1,4 +1,3 @@
-#include <c64.h>
 //struct vic define vic
 #include <conio.h>
 #include <stdlib.h>
@@ -6,12 +5,11 @@
 #include <time.h>
 #include <stdbool.h>
 //v=vic.addr;
-#define P_COLOR 	((unsigned char *)0xD800)
-#define P_TEXT1  	((unsigned char *)0x0400)
-#define P_TEXT2  	((unsigned char *)0x0000) //0x0800
-#define P_CONTROL	((unsigned char *)0xD018)
+#define P_COLOR ((unsigned char *)0xD800)
+#define P_TEXT  ((unsigned char *)0x0400)
+#define P_CIA 	((unsigned char *)0xDD00)
 
-#define ROUNDS 100
+#define ROUNDS 1
 
 unsigned char start[1000]={
 0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -40,9 +38,7 @@ unsigned char start[1000]={
 0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-unsigned char *spielfeld1;
-unsigned char *spielfeld2;
-unsigned char *control;
+unsigned char temp[1000];
 unsigned char beside[1000];
 
 //Lookup Tables
@@ -59,22 +55,22 @@ static const unsigned char graphicLookupx[1000]={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1
 static const unsigned char graphicLookupy[1000]={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24};
 int main(void)
 {
-	clock_t       t;
-	register unsigned long sec;
-	register unsigned long fps;
-	register unsigned      fps10;
-	register unsigned char background;
-	register unsigned char text;
-	register unsigned int  x;
+  clock_t       t;
+  register unsigned long sec;
+  register unsigned long fps;
+  register unsigned      fps10;
+  register unsigned char background;
+  register unsigned char text;
+  register unsigned int x;
 	register unsigned char round = 0;
 
-	spielfeld1 = (unsigned char *) P_TEXT1;
-	memcpy(spielfeld1,start,1000);
-
-	spielfeld2 = (unsigned char *) P_TEXT2;
-	memcpy(spielfeld2,start,1000);
-
-	control = (unsigned char *) P_CONTROL;
+	unsigned char *spielfeld;
+	spielfeld = (unsigned char *) P_TEXT;
+	for (x = 0; x < 1000; ++x)
+	{
+		spielfeld[x]=start[x];
+	}
+	x=0;
 
 	background = bgcolor(COLOR_BLACK);
 	text = textcolor(COLOR_WHITE);
@@ -83,7 +79,7 @@ int main(void)
 	while(round < ROUNDS && !kbhit()){
 		x=0;
 		do{
-			switch(spielfeld1[x]){
+			switch(spielfeld[x]){
 				case 1:
 					++beside[besideLookup1[x]];
 					++beside[besideLookup2[x]];
@@ -101,58 +97,43 @@ int main(void)
 		do{
 			switch (beside[x]){//x+y*XMAX
 				case 2:
-					spielfeld2[x]=spielfeld1[x];
+					temp[x]=spielfeld[x];
 					break;
 				case 3:
-					spielfeld2[x]=1;
+					temp[x]=1;
 					break;
 			}
 			++x;
 		}while(x<1000);
-		//memcpy(spielfeld1,temp,1000);
+		memcpy(spielfeld,temp,1000);
 		memset(beside, 0, 1000);
-		//memset(temp, 0, 1000);
-
-		if (round % 2 == 0)
-		{
-			spielfeld1 = (unsigned char *) P_TEXT2;
-			spielfeld2 = (unsigned char *) P_TEXT1;
-			//control[4] = 0;
-		}
-		else	
-		{
-			spielfeld1 = (unsigned char *) P_TEXT1;
-			spielfeld2 = (unsigned char *) P_TEXT2;
-			//control[4] = 1;
-		}
+		memset(temp, 0, 1000);
+		
 		++round;
 	}
-	t = clock() - t;
+		t = clock() - t;
 	
-	spielfeld1 = (unsigned char *) P_TEXT1;
-	spielfeld2 = (unsigned char *) P_TEXT2;
-	//control[4] = 1;
   /* Reset screen colors */
-  bgcolor (background);
-  textcolor (text);
-  clrscr ();
+    bgcolor (background);
+    textcolor (text);
+    clrscr ();
 
-  /* Calculate stats */
-  sec   = t*1000/CLK_TCK;
-  fps   = (round * (CLK_TCK * 10)) / t;
-  fps10 = fps % 10;
-  fps  /= 10;
+    /* Calculate stats */
+    sec   = t*1000/CLK_TCK;
+    fps   = (round * (CLK_TCK * 10)) / t;
+    fps10 = fps % 10;
+    fps  /= 10;
 
-  /* Output stats */
-  gotoxy (0, 0); cprintf ("time  : %lums", sec);
-  gotoxy (0, 1); cprintf ("ticks : %lu", t);
-  gotoxy (0, 2); cprintf ("frames: %lu", round);
-  gotoxy (0, 3); cprintf ("fps   : %lu.%u", fps, fps10);
+    /* Output stats */
+    gotoxy (0, 0); cprintf ("time  : %lums", sec);
+    gotoxy (0, 1); cprintf ("clock : %lu", t);
+    gotoxy (0, 2); cprintf ("frames: %lu", round);
+    gotoxy (0, 3); cprintf ("fps   : %lu.%u", fps, fps10);
 
-  /* Wait for a key, then end */
-  cputsxy (0, 5, "Press any key when done...");
-  (void) cgetc ();
+    /* Wait for a key, then end */
+    cputsxy (0, 5, "Press any key when done...");
+    (void) cgetc ();
 
-  /* Done */
-  return EXIT_SUCCESS;
+    /* Done */
+    return EXIT_SUCCESS;
 }
