@@ -47,8 +47,8 @@ Commits |Zeit [s] | Ticks | FPS | Verbesserung Prozent relativ  | Verbesserung P
 
 ### Graph
 
-![Graph](graph.png)
-![Graph](graph_FPS.png)
+![Graph](/Presentation/graph.png)
+![Graph](/Presentation/graph_FPS.png)
 
 ## Changes
 
@@ -156,13 +156,13 @@ Dies ist sinnvoll da ein Funktion call viel Zeit braucht. Die Funktion zähl leb
 
 #### Variable Temp gelöscht (26.5s)
 
-![Code](Code_Image/26,5.png)
+![Code](/Presentation/Code_Image/26,5.png)
 
 #### Weiter int Variablen mit char ersetzt (21.2s)
 
 #### Beim Regeln Prüfen if else (18,7s)
 
-![Code](Code_Image/18,7.png)
+![Code](/Presentation/Code_Image/18,7.png)
 
 #### Statt array Variable immer Spielfeld benutzen (17.4)
 
@@ -461,7 +461,7 @@ Die Ergebnisse dieser Rechnungen für die Nachbar Zellen ergeben jede Runde das 
 ++beside[besideLookup[i+7]];
 ```
 Nun kann dieser eine Lookup Table in 8 aufgeteilt werden um auch noch die letzten Rechnung zu minimieren.
-![Code](besideLookup.png)
+![Code](/Presentation/besideLookup.png)
 Nun steht jeder Lookup Table für die selbe Nachbarzelle jeder einzelnen Zelle.
 ```c
       switch(spielfeld[x]){
@@ -576,8 +576,8 @@ Bit 4-7 | Variable A | Startspeicheradresse (hex) | Anmerkung
 Da wir uns im Textmodus befinden übersetzt der VIC die Werte aus dem Grafikspeicher in Buchstaben, Zahlen und Sonderzeichen. Daher werden die 0en und 1en, welche wir hineinschreiben zu @ und A.
 
 
-![Code](characterset.png)
-![Code](characterset_2.png)
+![Code](/Presentation/characterset.png)
+![Code](/Presentation/characterset_2.png)
 
 Dieses Problem kann gelöst werden, indem "32" und "160" statt 0 und 1 geschrieben werden, oder indem ein custom Characterset eingeführt wird, welches ein Voll ausgefülltes und ein Leeres Feld anstatt @ und A für 0 und 1 hat.
 
